@@ -5,24 +5,36 @@ using System.Threading.Tasks;
 
 namespace StateMachine.entities
 {
-    public class OrderHistory
+    public class OrderHistory: OrderDetails
     {
-        public OrderHistory(Order order, OrderState fromState, OrderState state, string message, User user)
+        private OrderHistory()
         {
-            Order = order;
-            FromState = fromState;
-            ToState = state;
-            Message = message;
-            User = user;
-            Created = DateTimeOffset.UtcNow;
+
         }
 
-        public int Id { get; set; }
-        public Order Order { get; set; }
-        public OrderState FromState { get; set; }
-        public OrderState ToState { get; set; }
+        public static OrderHistory CreateFromOrderDetails(OrderDetails orderDetails, string message, User user)
+        {
+            OrderHistory history = new OrderHistory();
+            CopyFields<OrderDetails>(orderDetails, history);
+            history.Message = message;
+            history.User = user;
+            history.Timestamp = DateTimeOffset.UtcNow;
+            return history;
+        }
+
+        public int OrderHistoryId { get; set; }
         public string Message { get; set; }
         public User User { get; set; }
-        public DateTimeOffset Created { get; set; }
+        public DateTimeOffset Timestamp { get; set; }
+
+        public static void CopyFields<T>(T source, T destination)
+        {
+            var fields = source.GetType().GetFields();
+            foreach (var field in fields)
+            {
+                field.SetValue(destination, field.GetValue(source));
+            }
+        }
+
     }
 }

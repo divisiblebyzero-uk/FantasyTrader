@@ -5,21 +5,26 @@ using System.Threading.Tasks;
 
 namespace StateMachine.entities
 {
-    public class Order
+    public class OrderDetails
     {
-        public Order(string clientOrderId, int quantity, string symbol, int accountId)
+        protected OrderDetails()
+        {
+
+        }
+
+        public OrderDetails(string clientOrderId, int quantity, string symbol, int accountId, OrderType orderType)
         {
             ClientOrderId = clientOrderId;
             Quantity = quantity;
             Symbol = symbol;
             AccountId = accountId;
             FillQuantity = 0;
-            _orderHistory = new HashSet<OrderHistory>();
-            
+            OrderHistory = new HashSet<OrderHistory>();
+            OrderType = orderType;
             OrderState = OrderState.New;
         }
 
-        public int Id { get; set; }
+        public int OrderDetailsId { get; set; }
         public string ClientOrderId { get; set; }
         public int Quantity { get; set; }
         public string Symbol { get; set; }
@@ -27,18 +32,24 @@ namespace StateMachine.entities
         public Account Account { get; set; }
         public int FillQuantity { get; set; }
         public OrderState OrderState { get; set; }
+        public OrderType OrderType { get; set; }
 
-        public DateTimeOffset Created => OrderHistory.OrderByDescending(h => h.Created).First().Created;
-        public DateTimeOffset Updated => OrderHistory.OrderBy(h => h.Created).First().Created;
+        public DateTimeOffset GetCreated()
+        {
+            return OrderHistory.OrderByDescending(h => h.Timestamp).First().Timestamp;
+        }
 
-        public IEnumerable<OrderHistory> OrderHistory => _orderHistory.ToList();
+        public DateTimeOffset GetUpdated()
+        {
+            return OrderHistory.OrderBy(h => h.Timestamp).First().Timestamp;
+        }
+
+        public HashSet<OrderHistory> OrderHistory { get; set; }
 
         public void AddOrderHistory(OrderHistory orderHistory)
         {
-            _orderHistory.Add(orderHistory);
+            OrderHistory.Add(orderHistory);
         }
-
-        private HashSet<OrderHistory> _orderHistory { get; }
         
     }
 
