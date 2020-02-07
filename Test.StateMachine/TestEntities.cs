@@ -1,8 +1,11 @@
 using System;
+using System.Reflection.Metadata.Ecma335;
 using System.Threading;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using StateMachine.Controllers;
 using StateMachine.data;
 using StateMachine.entities;
@@ -22,12 +25,16 @@ namespace Test.StateMachine
 
         private StateMachineDataContext GetContext(string methodName)
         {
+            var connection = new SqliteConnection("DataSource=:memory:");
+            connection.Open();
             var options = new DbContextOptionsBuilder<StateMachineDataContext>()
-                .UseInMemoryDatabase(databaseName: methodName)
+                .UseSqlite(connection)
                 .Options;
-            return new StateMachineDataContext(options);
+            var context = new StateMachineDataContext(options);
+            var dbInitialiser = new DbInitialiser(context, new NullLogger<DbInitialiser>());
+            dbInitialiser.Initialize();
+            return context;
         }
-
 
         [Fact]
         public void OrderCreationAndUpdate()
@@ -36,9 +43,9 @@ namespace Test.StateMachine
             DateTimeOffset startTime = DateTimeOffset.UtcNow;
             Thread.Sleep(10);
             using var context = GetContext("blah");
-            OrderController oc = new OrderController(context);
-
-            OrderDetails order = oc.CreateOrder("MY ORDER", 100, "ABC", 1, OrderType.FillOrKill).OrderDetails;
+            OrdersController oc = new OrdersController(context);
+            Order order = new Order("MY ORDER2", 100, "ABC", 1, OrderType.FillOrKill);
+            oc.CreateOrder(order);
 
             TimeSpan difference = order.GetCreated() - startTime;
             Assert.True(difference.TotalMilliseconds > 0);

@@ -9,7 +9,7 @@ namespace StateMachine.entities
     {
         public int Id { get; set; }
 
-        public OrderDetails OrderDetails { get; set; }
+        public Order OrderDetails { get; set; }
         
         public OrderControllerResponseType ResponseType { get; set; }
         public string Message { get; set; }

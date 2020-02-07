@@ -13,9 +13,11 @@ namespace StateMachine.data
         {
 
         }
-
-        public DbSet<OrderDetails> OrderDetails { get; set; }
+        public DbSet<Account> Accounts { get; set; }
+        public DbSet<Order> Orders { get; set; }
         public DbSet<OrderHistory> OrderHistories { get; set; }
         public DbSet<OrderControllerResponse> OrderControllerResponses { get; set; }
+
+        public DbSet<User> Users { get; set; }
     }
 }

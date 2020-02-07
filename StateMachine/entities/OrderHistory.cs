@@ -2,32 +2,35 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace StateMachine.entities
 {
-    public class OrderHistory: OrderDetails
+    public class OrderHistory
     {
         private OrderHistory()
         {
 
         }
 
-        public static OrderHistory CreateFromOrderDetails(OrderDetails orderDetails, string message, User user)
+        public static OrderHistory CreateFromOrder(Order order, string message, User user)
         {
             OrderHistory history = new OrderHistory();
-            CopyFields<OrderDetails>(orderDetails, history);
+            history.OrderDetailsSnapshot = JsonConvert.SerializeObject(order);
             history.Message = message;
             history.User = user;
             history.Timestamp = DateTimeOffset.UtcNow;
             return history;
         }
 
-        public int OrderHistoryId { get; set; }
+        public int Id { get; set; }
+        public int OrderId { get; set; }
+        public string OrderDetailsSnapshot { get; set; }
         public string Message { get; set; }
         public User User { get; set; }
         public DateTimeOffset Timestamp { get; set; }
 
-        public static void CopyFields<T>(T source, T destination)
+        public static void CopyFields<T, U>(T source, U destination)
         {
             var fields = source.GetType().GetFields();
             foreach (var field in fields)

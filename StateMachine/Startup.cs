@@ -28,9 +28,10 @@ namespace StateMachine
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<StateMachineDataContext>(options =>
-                options.UseInMemoryDatabase("FantasyTrader"));
+                options.UseSqlServer(Configuration.GetConnectionString("FantasyTraderSqlServerLocal")));
+                //options.UseInMemoryDatabase("FantasyTrader"));
+            services.AddControllers().AddNewtonsoftJson();
             services.AddScoped<DbInitialiser>();
-            services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
