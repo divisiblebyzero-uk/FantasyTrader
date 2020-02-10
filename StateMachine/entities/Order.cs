@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,19 +8,9 @@ namespace StateMachine.entities
 {
     public class Order
     {
-        protected Order()
+        public Order()
         {
-
-        }
-
-        public Order(string clientOrderId, int quantity, string symbol, int accountId, OrderType orderType)
-        {
-            ClientOrderId = clientOrderId;
-            Quantity = quantity;
-            Symbol = symbol;
-            AccountId = accountId;
             FillQuantity = 0;
-            OrderType = orderType;
             OrderState = OrderState.New;
             Created = DateTimeOffset.UtcNow;
             Updated = Created;
@@ -37,6 +28,9 @@ namespace StateMachine.entities
         public DateTimeOffset Created { get; set; }
         public DateTimeOffset Updated { get; set; }
        
+        public Side Side { get; set; }
+        [Column(TypeName = "decimal(18,4)")]
+        public decimal Price { get; set; }
     }
 
     public enum OrderType
@@ -51,6 +45,12 @@ namespace StateMachine.entities
         Filled,
         Cancelled,
         Error
+    }
+
+    public enum Side
+    {
+        Buy,
+        Sell
     }
     
 }

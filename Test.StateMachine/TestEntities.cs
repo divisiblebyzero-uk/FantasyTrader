@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Threading;
 using Microsoft.Data.Sqlite;
@@ -44,10 +45,21 @@ namespace Test.StateMachine
             Thread.Sleep(10);
             using var context = GetContext("blah");
             OrdersController oc = new OrdersController(context);
-            Order order = new Order("MY ORDER2", 100, "ABC", 1, OrderType.FillOrKill);
+            var account = context.Accounts.FirstOrDefault();
+            Order order = new Order
+            {
+                ClientOrderId = "Test Order2",
+                Quantity = 100,
+                Symbol = "ABC",
+                Account = account,
+                OrderType = OrderType.FillOrKill,
+                Side = Side.Buy,
+                Price = 100m
+            };
+            
             oc.CreateOrder(order);
 
-            TimeSpan difference = order.GetCreated() - startTime;
+            TimeSpan difference = order.Created - startTime;
             Assert.True(difference.TotalMilliseconds > 0);
         }
     }

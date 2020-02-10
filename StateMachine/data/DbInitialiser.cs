@@ -58,7 +58,16 @@ namespace StateMachine.data
 
 
 
-            Order order = new Order("Test Order", 100, "ABC", account.Id, OrderType.FillOrKill);
+            Order order = new Order
+            {
+                ClientOrderId = "Test Order",
+                Quantity = 100,
+                Symbol = "ABC",
+                Account = account,
+                OrderType = OrderType.FillOrKill,
+                Side = Side.Buy,
+                Price = 100m
+            };
             _context.Orders.Add(order);
             _context.OrderHistories.Add(OrderHistory.CreateFromOrder(order, "Order created", null));
             _context.SaveChanges();

@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Converters;
 using StateMachine.data;
 
 namespace StateMachine
@@ -28,10 +29,19 @@ namespace StateMachine
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<StateMachineDataContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("FantasyTraderSqlServerLocal")));
+                options.UseSqlServer(Configuration.GetConnectionString("FantasyTraderSqlServerLocalDb")));
                 //options.UseInMemoryDatabase("FantasyTrader"));
-            services.AddControllers().AddNewtonsoftJson();
+            services.AddControllers().AddNewtonsoftJson(options =>
+                options.SerializerSettings.Converters.Add( new StringEnumConverter()));
             services.AddScoped<DbInitialiser>();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder =>
+                    builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,6 +51,8 @@ namespace StateMachine
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors("CorsPolicy");
 
             app.UseHttpsRedirection();
 
