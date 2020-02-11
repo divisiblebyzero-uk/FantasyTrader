@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Converters;
 using StateMachine.data;
+using StateMachine.HubConfig;
 
 namespace StateMachine
 {
@@ -34,13 +35,14 @@ namespace StateMachine
             services.AddControllers().AddNewtonsoftJson(options =>
                 options.SerializerSettings.Converters.Add( new StringEnumConverter()));
             services.AddScoped<DbInitialiser>();
-
+            services.AddSignalR();
             services.AddCors(options =>
             {
-                options.AddPolicy("CorsPolicy", builder =>
-                    builder.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader());
+                options.AddPolicy("CorsPolicy", builder => builder
+                    .WithOrigins("http://localhost:4200")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials());
             });
         }
 
@@ -63,6 +65,7 @@ namespace StateMachine
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<OrderHub>("/order");
             });
         }
     }

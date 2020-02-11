@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using StateMachine.data;
 using StateMachine.entities;
+using StateMachine.HubConfig;
 
 namespace StateMachine.Controllers
 {
@@ -15,10 +17,12 @@ namespace StateMachine.Controllers
     public class OrdersController : ControllerBase
     {
         private readonly StateMachineDataContext _context;
+        private IHubContext<OrderHub> _hub;
 
-        public OrdersController(StateMachineDataContext context)
+        public OrdersController(StateMachineDataContext context, IHubContext<OrderHub> hub)
         {
             _context = context;
+            _hub = hub;
         }
 
         [HttpGet]
@@ -60,6 +64,7 @@ namespace StateMachine.Controllers
             };
             _context.OrderControllerResponses.Add(response);
             _context.SaveChanges();
+            _hub.Clients.All.SendAsync("New Order", order);
             return response;
         }
 
