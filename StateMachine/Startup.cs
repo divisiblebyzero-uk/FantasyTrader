@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using StateMachine.data;
 using StateMachine.HubConfig;
@@ -35,7 +37,10 @@ namespace StateMachine
             services.AddControllers().AddNewtonsoftJson(options =>
                 options.SerializerSettings.Converters.Add( new StringEnumConverter()));
             services.AddScoped<DbInitialiser>();
-            services.AddSignalR();
+            services.AddSignalR().AddJsonProtocol(options =>
+            {
+                options.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy", builder => builder

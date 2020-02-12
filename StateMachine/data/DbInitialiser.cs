@@ -56,32 +56,31 @@ namespace StateMachine.data
             var account = GetOrCreateAccount("Default Account");
             var user = GetOrCreateUser("Default User");
 
-
-
-            Order order = new Order
+            if (_context.Orders.Count() < 5)
             {
-                ClientOrderId = "Test Order",
-                Quantity = 100,
-                Symbol = "ABC",
-                Account = account,
-                OrderType = OrderType.FillOrKill,
-                Side = Side.Buy,
-                Price = 100m
-            };
-            _context.Orders.Add(order);
-            _context.OrderHistories.Add(OrderHistory.CreateFromOrder(order, "Order created", null));
-            _context.SaveChanges();
+                Order order = new Order
+                {
+                    ClientOrderId = "Test Order",
+                    Quantity = 100,
+                    Symbol = "ABC",
+                    Account = account,
+                    OrderType = OrderType.FillOrKill,
+                    Side = Side.Buy,
+                    Price = 100m
+                };
+                _context.Orders.Add(order);
+                _context.OrderHistories.Add(OrderHistory.CreateFromOrder(order, "Order created", null));
+                _context.SaveChanges();
 
-            var response = new OrderControllerResponse
-            {
-                OrderDetails = order,
-                ResponseType = OrderControllerResponseType.Accept
-            };
-            _context.OrderControllerResponses.Add(response);
-            _context.SaveChanges();
-            
+                var response = new OrderControllerResponse
+                {
+                    OrderDetails = order,
+                    ResponseType = OrderControllerResponseType.Accept
+                };
+                _context.OrderControllerResponses.Add(response);
+                _context.SaveChanges();
+            }
 
-            //_ordersController.CreateOrder(new Order("Test Order 3", 100, "ABC", 1, OrderType.FillOrKill));
         }
     }
 }

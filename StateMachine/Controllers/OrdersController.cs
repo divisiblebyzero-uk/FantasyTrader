@@ -17,7 +17,7 @@ namespace StateMachine.Controllers
     public class OrdersController : ControllerBase
     {
         private readonly StateMachineDataContext _context;
-        private IHubContext<OrderHub> _hub;
+        private readonly IHubContext<OrderHub> _hub;
 
         public OrdersController(StateMachineDataContext context, IHubContext<OrderHub> hub)
         {
