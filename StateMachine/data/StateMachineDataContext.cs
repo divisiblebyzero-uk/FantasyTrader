@@ -17,7 +17,9 @@ namespace StateMachine.data
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderHistory> OrderHistories { get; set; }
         public DbSet<OrderControllerResponse> OrderControllerResponses { get; set; }
-
         public DbSet<User> Users { get; set; }
+        public DbSet<Instrument> Instruments { get; set; }
+        public DbSet<PriceGrid> PriceGrids { get; set; }
+        public DbSet<PriceGridEntry> PriceGridEntries { get; set; }
     }
 }

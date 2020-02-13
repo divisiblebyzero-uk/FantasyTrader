@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StateMachine.data;
 
 namespace StateMachine.Migrations
 {
     [DbContext(typeof(StateMachineDataContext))]
-    partial class StateMachineDataContextModelSnapshot : ModelSnapshot
+    [Migration("20200213191734_Added instruments")]
+    partial class Addedinstruments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -154,46 +156,6 @@ namespace StateMachine.Migrations
                     b.ToTable("OrderHistories");
                 });
 
-            modelBuilder.Entity("StateMachine.entities.PriceGrid", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("OwnerId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OwnerId");
-
-                    b.ToTable("PriceGrids");
-                });
-
-            modelBuilder.Entity("StateMachine.entities.PriceGridEntry", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("PriceGridId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Symbol")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PriceGridId");
-
-                    b.ToTable("PriceGridEntries");
-                });
-
             modelBuilder.Entity("StateMachine.entities.User", b =>
                 {
                     b.Property<int>("Id")
@@ -230,20 +192,6 @@ namespace StateMachine.Migrations
                     b.HasOne("StateMachine.entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("StateMachine.entities.PriceGrid", b =>
-                {
-                    b.HasOne("StateMachine.entities.User", "Owner")
-                        .WithMany()
-                        .HasForeignKey("OwnerId");
-                });
-
-            modelBuilder.Entity("StateMachine.entities.PriceGridEntry", b =>
-                {
-                    b.HasOne("StateMachine.entities.PriceGrid", "PriceGrid")
-                        .WithMany()
-                        .HasForeignKey("PriceGridId");
                 });
 #pragma warning restore 612, 618
         }

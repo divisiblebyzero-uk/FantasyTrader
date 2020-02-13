@@ -63,7 +63,7 @@ namespace Test.StateMachine
                 Account = account,
                 OrderType = OrderType.FillOrKill,
                 Side = Side.Buy,
-                Price = 100m
+                LimitPrice = 100m
             };
             
             oc.CreateOrder(order);

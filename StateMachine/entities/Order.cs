@@ -30,7 +30,9 @@ namespace StateMachine.entities
        
         public Side Side { get; set; }
         [Column(TypeName = "decimal(18,4)")]
-        public decimal Price { get; set; }
+        public decimal LimitPrice { get; set; }
+        [Column(TypeName = "decimal(18,4)")]
+        public decimal AverageFillPrice { get; set; }
     }
 
     public enum OrderType

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using StateMachine.Controllers;
 using StateMachine.entities;
@@ -48,13 +49,48 @@ namespace StateMachine.data
             return user;
         }
 
+        private void CreateInstrumentsIfNecessary()
+        {
+            if (_context.Instruments.Count() < 10)
+            {
+                string[] symbols = new string[] { "MSFT", "AAPL", "GOOG", "TSLA", "CSCO", "PEP", "C", "DAVA", "SQ", "KHC" };
+                foreach (string symbol in symbols)
+                {
+                    GetOrCreateInstrument(symbol, InstrumentPriceSource.AlphaVantage);
+                }
+            }
+        }
+
+        private Instrument GetOrCreateInstrument(String symbol, InstrumentPriceSource instrumentPriceSource)
+        {
+            var instrument = _context.Instruments.FirstOrDefault(i => i.Symbol == symbol);
+            if (instrument == null)
+            {
+                instrument = new Instrument
+                {
+                    Symbol = symbol,
+                    InstrumentPriceSource = instrumentPriceSource
+                };
+                _context.Instruments.Add(instrument);
+            }
+
+            _context.SaveChanges();
+            return instrument;
+        }
+
         public void Initialize()
         {
-            
+
             _context.Database.EnsureCreated();
 
             var account = GetOrCreateAccount("Default Account");
             var user = GetOrCreateUser("Default User");
+            CreateInstrumentsIfNecessary();
+            var instrument = GetOrCreateInstrument("FNTSY", InstrumentPriceSource.FantasyMarket);
+            CreateOrdersIfNecessary(account, instrument);
+        }
+
+        private void CreateOrdersIfNecessary(Account account, Instrument instrument) { 
 
             if (_context.Orders.Count() < 5)
             {
@@ -62,11 +98,11 @@ namespace StateMachine.data
                 {
                     ClientOrderId = "Test Order",
                     Quantity = 100,
-                    Symbol = "ABC",
+                    Symbol = instrument.Symbol,
                     Account = account,
                     OrderType = OrderType.FillOrKill,
                     Side = Side.Buy,
-                    Price = 100m
+                    LimitPrice = 100m
                 };
                 _context.Orders.Add(order);
                 _context.OrderHistories.Add(OrderHistory.CreateFromOrder(order, "Order created", null));
