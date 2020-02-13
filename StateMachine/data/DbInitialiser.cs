@@ -10,8 +10,11 @@ using StateMachine.entities;
 
 namespace StateMachine.data
 {
+    
+
     public class DbInitialiser
     {
+        private readonly string[] _symbols = new string[] { "MSFT", "AAPL", "GOOG", "TSLA", "CSCO", "PEP", "C", "DAVA", "SQ", "KHC" };
         private readonly StateMachineDataContext _context;
         private readonly ILogger<DbInitialiser> _logger;
         private readonly OrdersController _ordersController;
@@ -53,8 +56,7 @@ namespace StateMachine.data
         {
             if (_context.Instruments.Count() < 10)
             {
-                string[] symbols = new string[] { "MSFT", "AAPL", "GOOG", "TSLA", "CSCO", "PEP", "C", "DAVA", "SQ", "KHC" };
-                foreach (string symbol in symbols)
+                foreach (string symbol in _symbols)
                 {
                     GetOrCreateInstrument(symbol, InstrumentPriceSource.AlphaVantage);
                 }
@@ -88,6 +90,39 @@ namespace StateMachine.data
             CreateInstrumentsIfNecessary();
             var instrument = GetOrCreateInstrument("FNTSY", InstrumentPriceSource.FantasyMarket);
             CreateOrdersIfNecessary(account, instrument);
+
+            var priceGrid = GetOrCreatePriceGrid(user, "My Grid");
+            PopulateIfNecessary(priceGrid);
+        }
+
+        private PriceGrid GetOrCreatePriceGrid(User user, string name)
+        {
+            var priceGrid = _context.PriceGrids.FirstOrDefault(pg => pg.Owner == user && pg.Name == name);
+            if (priceGrid == null)
+            {
+                priceGrid = new PriceGrid
+                {
+                    Owner = user,
+                    Name = name
+                };
+                _context.PriceGrids.Add(priceGrid);
+                _context.SaveChanges();
+            }
+
+            return priceGrid;
+        }
+
+        public void PopulateIfNecessary(PriceGrid priceGrid)
+        {
+            if (_context.PriceGridEntries.Count(pge => pge.PriceGrid == priceGrid) == 0)
+            {
+                foreach (string symbol in _symbols)
+                {
+                    _context.PriceGridEntries.Add(new PriceGridEntry {PriceGrid = priceGrid, Symbol = symbol});
+                }
+
+                _context.SaveChanges();
+            }
         }
 
         private void CreateOrdersIfNecessary(Account account, Instrument instrument) { 
