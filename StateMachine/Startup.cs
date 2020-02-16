@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -14,8 +17,11 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Okta.AspNetCore;
 using StateMachine.data;
 using StateMachine.HubConfig;
+using IdentityRole = Microsoft.AspNetCore.Identity.IdentityRole;
+using IdentityUser = Microsoft.AspNetCore.Identity.IdentityUser;
 
 namespace StateMachine
 {
@@ -34,8 +40,6 @@ namespace StateMachine
             services.AddDbContext<StateMachineDataContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("FantasyTraderSqlServerLocalDb")));
                 //options.UseInMemoryDatabase("FantasyTrader"));
-            services.AddControllers().AddNewtonsoftJson(options =>
-                options.SerializerSettings.Converters.Add( new StringEnumConverter()));
             services.AddScoped<DbInitialiser>();
             services.AddSignalR().AddJsonProtocol(options =>
             {
@@ -49,6 +53,37 @@ namespace StateMachine
                     .AllowAnyHeader()
                     .AllowCredentials());
             });
+
+
+            /*
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer()
+                .AddGoogle(options =>
+                {
+                    IConfigurationSection googleAuthNSection =
+                        Configuration.GetSection("Authentication:Google");
+
+                    options.ClientId = googleAuthNSection["ClientId"];
+                    options.ClientSecret = googleAuthNSection["ClientSecret"];
+                });
+                */
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = OktaDefaults.ApiAuthenticationScheme;
+                    options.DefaultChallengeScheme = OktaDefaults.ApiAuthenticationScheme;
+                    options.DefaultSignInScheme = OktaDefaults.ApiAuthenticationScheme;
+                })
+                .AddOktaWebApi(new OktaWebApiOptions()
+                {
+                    OktaDomain = "https://dev-648496.okta.com"
+                });
+            services.AddControllers().AddNewtonsoftJson(options =>
+                options.SerializerSettings.Converters.Add(new StringEnumConverter()));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -65,8 +100,8 @@ namespace StateMachine
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

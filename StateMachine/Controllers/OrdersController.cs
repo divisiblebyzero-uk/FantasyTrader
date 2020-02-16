@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -26,6 +27,7 @@ namespace StateMachine.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
         {
             return await _context.Orders.ToListAsync();
