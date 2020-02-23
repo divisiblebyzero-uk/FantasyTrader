@@ -42,9 +42,9 @@ namespace FantasyTrader.WebAPI
                 options.UseSqlServer(Configuration.GetConnectionString("FantasyTraderSqlServerLocalDb")));
                 //options.UseInMemoryDatabase("FantasyTrader"));
             services.AddScoped<DbInitialiser>();
-            services.AddHostedService<PriceDistributionService>();
+            
             services.AddSingleton<FantasyMarketPriceSource>();
-            services.AddSignalR().AddJsonProtocol(options =>
+            services.AddSignalR().AddMessagePackProtocol().AddJsonProtocol(options =>
             {
                 options.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });

@@ -10,5 +10,6 @@ namespace FantasyTrader.WebAPI.entities
         public string Symbol { get; set; }
         public decimal LastPrice { get; set; }
         public DateTimeOffset Timestamp { get; set; }
+        public int Direction { get; set; }
     }
 }
