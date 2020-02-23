@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FantasyTrader.WebAPI.entities;
 using Microsoft.AspNetCore.SignalR;
-using StateMachine.entities;
 
-namespace StateMachine.HubConfig
+namespace FantasyTrader.WebAPI.HubConfig
 {
     public class OrderHub : Hub
     {

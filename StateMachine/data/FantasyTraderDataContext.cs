@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FantasyTrader.WebAPI.entities;
 using Microsoft.EntityFrameworkCore;
-using StateMachine.entities;
 
-namespace StateMachine.data
+namespace FantasyTrader.WebAPI.data
 {
-    public class StateMachineDataContext : DbContext
+    public class FantasyTraderDataContext : DbContext
     {
-        public StateMachineDataContext(DbContextOptions<StateMachineDataContext> options) : base(options)
+        public FantasyTraderDataContext(DbContextOptions<FantasyTraderDataContext> options) : base(options)
         {
 
         }

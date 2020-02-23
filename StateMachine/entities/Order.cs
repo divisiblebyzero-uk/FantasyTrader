@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace StateMachine.entities
+namespace FantasyTrader.WebAPI.entities
 {
     public class Order
     {

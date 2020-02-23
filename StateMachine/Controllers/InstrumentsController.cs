@@ -2,21 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FantasyTrader.WebAPI.data;
+using FantasyTrader.WebAPI.entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using StateMachine.data;
-using StateMachine.entities;
 
-namespace StateMachine.Controllers
+namespace FantasyTrader.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class InstrumentsController : ControllerBase
     {
-        private readonly StateMachineDataContext _context;
+        private readonly FantasyTraderDataContext _context;
 
-        public InstrumentsController(StateMachineDataContext context)
+        public InstrumentsController(FantasyTraderDataContext context)
         {
             _context = context;
         }

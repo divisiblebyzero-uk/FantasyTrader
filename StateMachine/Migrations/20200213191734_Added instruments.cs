@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace StateMachine.Migrations
+namespace FantasyTrader.WebAPI.Migrations
 {
     public partial class Addedinstruments : Migration
     {

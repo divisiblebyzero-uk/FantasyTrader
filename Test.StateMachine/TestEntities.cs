@@ -9,10 +9,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
-using StateMachine.Controllers;
-using StateMachine.data;
-using StateMachine.entities;
-using StateMachine.HubConfig;
+using FantasyTrader.WebAPI.Controllers;
+using FantasyTrader.WebAPI.data;
+using FantasyTrader.WebAPI.entities;
+using FantasyTrader.WebAPI.HubConfig;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -27,14 +27,14 @@ namespace Test.StateMachine
             _outputHelper = outputHelper;
         }
 
-        private StateMachineDataContext GetContext(string methodName)
+        private FantasyTraderDataContext GetContext(string methodName)
         {
             var connection = new SqliteConnection("DataSource=:memory:");
             connection.Open();
-            var options = new DbContextOptionsBuilder<StateMachineDataContext>()
+            var options = new DbContextOptionsBuilder<FantasyTraderDataContext>()
                 .UseSqlite(connection)
                 .Options;
-            var context = new StateMachineDataContext(options);
+            var context = new FantasyTraderDataContext(options);
             var dbInitialiser = new DbInitialiser(context, new NullLogger<DbInitialiser>());
             dbInitialiser.Initialize();
             return context;

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace StateMachine.entities
+namespace FantasyTrader.WebAPI.entities
 {
     public class OrderHistory
     {

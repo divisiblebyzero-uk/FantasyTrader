@@ -2,25 +2,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FantasyTrader.WebAPI.data;
+using FantasyTrader.WebAPI.entities;
+using FantasyTrader.WebAPI.HubConfig;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using StateMachine.data;
-using StateMachine.entities;
-using StateMachine.HubConfig;
 
-namespace StateMachine.Controllers
+namespace FantasyTrader.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class OrdersController : ControllerBase
     {
-        private readonly StateMachineDataContext _context;
+        private readonly FantasyTraderDataContext _context;
         private readonly IHubContext<OrderHub> _hub;
 
-        public OrdersController(StateMachineDataContext context, IHubContext<OrderHub> hub)
+        public OrdersController(FantasyTraderDataContext context, IHubContext<OrderHub> hub)
         {
             _context = context;
             _hub = hub;

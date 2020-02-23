@@ -3,23 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using FantasyTrader.WebAPI.Controllers;
+using FantasyTrader.WebAPI.entities;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
-using StateMachine.Controllers;
-using StateMachine.entities;
 
-namespace StateMachine.data
+namespace FantasyTrader.WebAPI.data
 {
     
 
     public class DbInitialiser
     {
         private readonly string[] _symbols = new string[] { "MSFT", "AAPL", "GOOG", "TSLA", "CSCO", "PEP", "C", "DAVA", "SQ", "KHC" };
-        private readonly StateMachineDataContext _context;
+        private readonly FantasyTraderDataContext _context;
         private readonly ILogger<DbInitialiser> _logger;
         private readonly OrdersController _ordersController;
 
-        public DbInitialiser(StateMachineDataContext context, ILogger<DbInitialiser> logger)//, OrdersController ordersController)
+        public DbInitialiser(FantasyTraderDataContext context, ILogger<DbInitialiser> logger)//, OrdersController ordersController)
         {
             _context = context;
             _logger = logger;
