@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\StateMachine\FantasyTrader.WebAPI.csproj" />
+    <ProjectReference Include="..\FantasyTrader.WebAPI\FantasyTrader.WebAPI.csproj" />
   </ItemGroup>
 
 </Project>

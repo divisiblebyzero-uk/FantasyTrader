@@ -58,6 +58,7 @@ namespace FantasyTrader.WebAPI.Controllers
         [HttpPost]
         public OrderControllerResponse CreateOrder(Order order)
         {
+            order.Account = _context.Accounts.FirstOrDefault(a => a.Name == order.Account.Name);
             _context.Orders.Add(order);
             _context.OrderHistories.Add(OrderHistory.CreateFromOrder(order, "Order created", null));
             var response = new OrderControllerResponse

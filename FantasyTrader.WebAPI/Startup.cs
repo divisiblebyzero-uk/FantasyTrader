@@ -44,7 +44,8 @@ namespace FantasyTrader.WebAPI
             services.AddScoped<DbInitialiser>();
             
             services.AddSingleton<FantasyMarketPriceSource>();
-            services.AddSignalR().AddMessagePackProtocol().AddJsonProtocol(options =>
+            services.AddSignalR(hubOptions => { hubOptions.EnableDetailedErrors = true; }
+                ).AddMessagePackProtocol().AddJsonProtocol(options =>
             {
                 options.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
