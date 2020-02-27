@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using FantasyTrader.WebAPI.data;
 using FantasyTrader.WebAPI.entities;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace FantasyTrader.WebAPI.HubConfig
@@ -28,6 +29,12 @@ namespace FantasyTrader.WebAPI.HubConfig
             Order o = JsonConvert.DeserializeObject<Order>(name);
             return "Hello: " + name;
         }
+
+        public async Task<IEnumerable<Order>> GetOrders()
+        {
+            return await _context.Orders.ToListAsync();
+        }
+
         public string CreateOrder(string orderString)
         {
             Order order = JsonConvert.DeserializeObject<Order>(orderString);
