@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FantasyTrader.WebAPI.data;
 using FantasyTrader.WebAPI.entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 namespace FantasyTrader.WebAPI.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class PriceGridsController : ControllerBase
     {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FantasyTrader.WebAPI.data;
 using FantasyTrader.WebAPI.entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -11,6 +12,7 @@ using Newtonsoft.Json;
 namespace FantasyTrader.WebAPI.HubConfig
 {
 
+    [Authorize]
     public class OrderHub : Hub
     {
         private FantasyTraderDataContext _context;

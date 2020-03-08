@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using FantasyTrader.WebAPI.entities;
 using FantasyTrader.WebAPI.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 
 namespace FantasyTrader.WebAPI.HubConfig
 {
+   
     public class PriceHub : Hub
     {
 
