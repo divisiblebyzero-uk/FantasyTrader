@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FantasyTrader.WebAPI.data;
 using FantasyTrader.WebAPI.entities;
+using FantasyTrader.WebAPI.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -15,44 +16,24 @@ namespace FantasyTrader.WebAPI.HubConfig
     [Authorize]
     public class OrderHub : Hub
     {
-        private FantasyTraderDataContext _context;
-        public OrderHub(FantasyTraderDataContext context)
+        private readonly FantasyTraderDataContext _context;
+        private readonly OrderService _orderService;
+        public OrderHub(FantasyTraderDataContext context, OrderService orderService)
         {
             _context = context;
-        }
-
-        public async Task SendOrder(Order order)
-        {
-            await Clients.All.SendAsync("New order", order);
-        }
-
-        public string SayHello(string name)
-        {
-            Order o = JsonConvert.DeserializeObject<Order>(name);
-            return "Hello: " + name;
+            _orderService = orderService;
         }
 
         public async Task<IEnumerable<Order>> GetOrders()
         {
-            return await _context.Orders.ToListAsync();
+            return await _context.Orders.Include(o => o.Account).ToListAsync();
         }
 
-        public string CreateOrder(string orderString)
+        public async Task CreateOrder(string orderString)
         {
             Order order = JsonConvert.DeserializeObject<Order>(orderString);
-            order.Account = _context.Accounts.FirstOrDefault(a => a.Name == order.Account.Name);
-            _context.Orders.Add(order);
-            _context.OrderHistories.Add(OrderHistory.CreateFromOrder(order, "Order created", null));
-            var response = new OrderControllerResponse
-            {
-                OrderDetails = order,
-                ResponseType = OrderControllerResponseType.Accept
-            };
-            _context.OrderControllerResponses.Add(response);
-            _context.SaveChanges();
-            Clients.All.SendAsync("New Order", order);
-            //return response;
-            return "OK";
+            await _orderService.CreateOrder(order);
+            await _orderService.ProcessOrders();
         }
     }
 

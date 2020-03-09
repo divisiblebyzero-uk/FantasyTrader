@@ -42,13 +42,15 @@ namespace FantasyTrader.WebAPI
                 options.UseSqlServer(Configuration.GetConnectionString("FantasyTraderSqlServerLocalDb")));
                 //options.UseInMemoryDatabase("FantasyTrader"));
             services.AddScoped<DbInitialiser>();
-            
+            services.AddScoped<OrderService>();
             services.AddSingleton<FantasyMarketPriceSource>();
+            
             services.AddSignalR(hubOptions => { hubOptions.EnableDetailedErrors = true; }
                 ).AddMessagePackProtocol().AddJsonProtocol(options =>
             {
                 options.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
+
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy", builder => builder
@@ -57,21 +59,7 @@ namespace FantasyTrader.WebAPI
                     .AllowAnyHeader()
                     .AllowCredentials());
             });
-
-
-            /*services.AddAuthentication(options =>
-                {
-                    options.DefaultAuthenticateScheme = OktaDefaults.ApiAuthenticationScheme;
-                    options.DefaultChallengeScheme = OktaDefaults.ApiAuthenticationScheme;
-                    options.DefaultSignInScheme = OktaDefaults.ApiAuthenticationScheme;
-                })
-                .AddOktaWebApi(new OktaWebApiOptions()
-                {
-                    OktaDomain = "https://dev-648496.okta.com"
-                });
-            */
-
-                    
+                   
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

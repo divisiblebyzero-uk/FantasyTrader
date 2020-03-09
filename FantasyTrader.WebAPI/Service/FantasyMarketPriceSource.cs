@@ -82,6 +82,11 @@ namespace FantasyTrader.WebAPI.Service
             private set { _marketState = value; }
         }
 
+        public Price GetPriceForSymbol(String symbol)
+        {
+            return _prices[symbol];
+        }
+
         public IEnumerable<Price> GetAllPrices()
         {
             return _prices.Values;

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using FantasyTrader.WebAPI.data;
 using FantasyTrader.WebAPI.entities;
 using FantasyTrader.WebAPI.HubConfig;
+using FantasyTrader.WebAPI.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,11 +20,20 @@ namespace FantasyTrader.WebAPI.Controllers
     {
         private readonly FantasyTraderDataContext _context;
         private readonly IHubContext<OrderHub> _hub;
+        private readonly OrderService _orderService;
 
-        public OrdersController(FantasyTraderDataContext context, IHubContext<OrderHub> hub)
+        public OrdersController(FantasyTraderDataContext context, IHubContext<OrderHub> hub, OrderService orderService)
         {
             _context = context;
             _hub = hub;
+            _orderService = orderService;
+        }
+
+        [HttpGet("process")]
+        public async Task<ActionResult> ProcessOrders()
+        {
+            await _orderService.ProcessOrders();
+            return Ok();
         }
 
         [HttpGet]
@@ -56,7 +66,7 @@ namespace FantasyTrader.WebAPI.Controllers
         }*/
 
         [HttpPost]
-        public OrderControllerResponse CreateOrder(Order order)
+        public async Task<ActionResult<OrderControllerResponse>> CreateOrder(Order order)
         {
             order.Account = _context.Accounts.FirstOrDefault(a => a.Name == order.Account.Name);
             _context.Orders.Add(order);
@@ -67,7 +77,7 @@ namespace FantasyTrader.WebAPI.Controllers
             };
             _context.OrderControllerResponses.Add(response);
             _context.SaveChanges();
-            _hub.Clients.All.SendAsync("New Order", order);
+            await _hub.Clients.All.SendAsync("New Order", order);
             return response;
         }
 

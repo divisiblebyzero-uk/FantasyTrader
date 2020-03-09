@@ -33,6 +33,12 @@ namespace FantasyTrader.WebAPI.entities
         public decimal LimitPrice { get; set; }
         [Column(TypeName = "decimal(18,4)")]
         public decimal AverageFillPrice { get; set; }
+
+        [NotMapped]
+        public decimal PercentComplete
+        {
+            get => Decimal.Divide(FillQuantity, Quantity);
+        }
     }
 
     public enum OrderType
@@ -46,7 +52,9 @@ namespace FantasyTrader.WebAPI.entities
         Partial,
         Filled,
         Cancelled,
-        Error
+        Error,
+        BalanceCancelled,
+        Rejected
     }
 
     public enum Side

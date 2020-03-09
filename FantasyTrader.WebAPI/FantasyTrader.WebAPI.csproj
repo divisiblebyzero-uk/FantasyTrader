@@ -5,6 +5,9 @@
     <UserSecretsId>c5014bac-6cab-4d4c-9c56-3e7ab2a170a3</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Controllers\OrdersController.cs~RF80dae524.TMP" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="3.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.1" />
