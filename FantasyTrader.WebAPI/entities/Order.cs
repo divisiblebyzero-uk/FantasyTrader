@@ -33,11 +33,11 @@ namespace FantasyTrader.WebAPI.entities
         public decimal LimitPrice { get; set; }
         [Column(TypeName = "decimal(18,4)")]
         public decimal AverageFillPrice { get; set; }
+        [NotMapped] public decimal PercentComplete => Decimal.Divide(FillQuantity, Quantity);
 
-        [NotMapped]
-        public decimal PercentComplete
+        public override string ToString()
         {
-            get => Decimal.Divide(FillQuantity, Quantity);
+            return $"{nameof(Id)}: {Id}, {nameof(ClientOrderId)}: {ClientOrderId}, {nameof(Quantity)}: {Quantity}, {nameof(Symbol)}: {Symbol}, {nameof(AccountId)}: {AccountId}, {nameof(Account)}: {Account}, {nameof(FillQuantity)}: {FillQuantity}, {nameof(OrderState)}: {OrderState}, {nameof(OrderType)}: {OrderType}, {nameof(Created)}: {Created}, {nameof(Updated)}: {Updated}, {nameof(Side)}: {Side}, {nameof(LimitPrice)}: {LimitPrice}, {nameof(AverageFillPrice)}: {AverageFillPrice}, {nameof(PercentComplete)}: {PercentComplete}";
         }
     }
 

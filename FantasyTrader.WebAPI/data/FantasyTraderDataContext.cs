@@ -21,5 +21,6 @@ namespace FantasyTrader.WebAPI.data
         public DbSet<Instrument> Instruments { get; set; }
         public DbSet<PriceGrid> PriceGrids { get; set; }
         public DbSet<PriceGridEntry> PriceGridEntries { get; set; }
+        public DbSet<Position> Positions { get; set; }
     }
 }
