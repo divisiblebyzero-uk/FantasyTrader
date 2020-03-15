@@ -15,11 +15,14 @@ namespace FantasyTrader.WebAPI.entities
 
         public static OrderHistory CreateFromOrder(Order order, string message, User user)
         {
-            OrderHistory history = new OrderHistory();
-            history.OrderDetailsSnapshot = JsonConvert.SerializeObject(order);
-            history.Message = message;
-            history.User = user;
-            history.Timestamp = DateTimeOffset.UtcNow;
+            OrderHistory history = new OrderHistory
+            {
+                OrderId = order.Id,
+                OrderDetailsSnapshot = JsonConvert.SerializeObject(order),
+                Message = message,
+                User = user,
+                Timestamp = DateTimeOffset.UtcNow
+            };
             return history;
         }
 
@@ -29,15 +32,6 @@ namespace FantasyTrader.WebAPI.entities
         public string Message { get; set; }
         public User User { get; set; }
         public DateTimeOffset Timestamp { get; set; }
-
-        public static void CopyFields<T, U>(T source, U destination)
-        {
-            var fields = source.GetType().GetFields();
-            foreach (var field in fields)
-            {
-                field.SetValue(destination, field.GetValue(source));
-            }
-        }
 
     }
 }

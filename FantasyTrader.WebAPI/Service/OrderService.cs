@@ -148,6 +148,7 @@ namespace FantasyTrader.WebAPI.Service
         {
             order.Account = await _context.Accounts.FirstOrDefaultAsync(a => a.Name == order.Account.Name);
             await _context.Orders.AddAsync(order);
+            _context.SaveChanges();
             await AddSystemHistory(order, "Order Created");
             var response = new OrderControllerResponse
             {
